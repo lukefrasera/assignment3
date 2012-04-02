@@ -643,7 +643,7 @@ int computeComponents_BFS_( ImageType & input, ImageType & output )
        }
    }
    conncomp = 0;
-   
+
    for( int i = 0; i < row; i++ )
    {
        for( int j = 0; j < col; j++ )
@@ -669,7 +669,7 @@ Purpose: Compute how many objects are in an image
 Notes: The two images passed into the function must already be sized
        the same
 */
-int computeComponents_DFS_(  ImageType & input, ImageType & output )
+int computeComponents_DFS_(  ImageType & input, ImageType & output,  )
 {
    int row, col, LEVEL;
    int value, value_2;
@@ -687,6 +687,7 @@ int computeComponents_DFS_(  ImageType & input, ImageType & output )
    }
    conncomp = 0;
    
+   // STORE VALUES TO CORRECT STUFF
    for( int i = 0; i < row; i++ )
    {
        for( int j = 0; j < col; j++ )
