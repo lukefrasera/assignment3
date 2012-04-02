@@ -6,6 +6,7 @@ UnsortedType<ItemType>::UnsortedType()
 {
  length = 0;
  listData = NULL;
+ 
 }
 
 // DESTRUCTOR
