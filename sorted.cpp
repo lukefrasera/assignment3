@@ -1,4 +1,7 @@
+
+/*
 #include "sorted.h"
+
 
 // CONSTRUCTOR
 template<class ItemType>
@@ -155,13 +158,8 @@ void SortedType<ItemType>::DeleteItem(ItemType item)
 }
 
 // 
- 
- 
- 
- 
- 
- 
- 
+
+ */
  
  
  

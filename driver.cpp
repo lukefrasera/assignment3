@@ -1,18 +1,19 @@
+#ifndef DRIVE_H
+#define DRIVE_H
+
 #include <iostream>
 #include "image.h"
 #include "ReadImageHeader.cpp"
 #include "ReadImage.cpp"
 #include "WriteImage.cpp"
-#include "nodetype.h"
 #include "stack.h"
 #include "queue.h"
 #include "sorted.h"
-#include "unsorted.h"
-
-
 
 
 using namespace std;
+
+
 
 // Function prototypes
 int computeComponents_BFS_(  ImageType & input, ImageType & output );
@@ -25,7 +26,7 @@ void findcomponentBFS( ImageType & input, ImageType & output, int x, int y,
                          int label );
                          
 void findcomponentDFS( ImageType & input, ImageType & output, int x, int y,
-                            int label, RegionType region );
+                            int label, RegionType );
 
 int main()
 {
@@ -36,6 +37,7 @@ int main()
     int** maker;
     char cont;
     ImageType tester;
+
     
     cout << "------- Program Tester -------" << endl;
     cout << "Input File Name: ";
@@ -685,6 +687,8 @@ int computeComponents_DFS_(  ImageType & input, ImageType & output,
    int conncomp, label;
    RegionType region;
    
+   
+   
    // retrieve image info
    input.getImageInfo( row, col, LEVEL );
    
@@ -820,3 +824,4 @@ void findcomponentDFS(  ImageType & input, ImageType & output, int x, int y,
    
 }
 
+#endif

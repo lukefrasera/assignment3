@@ -1,17 +1,17 @@
-#include <iostream>
 #ifndef NODE_H
 #define NODE_H
-
 
 using namespace std;
 
 class PixelType;
 class RegionType;
 
-template<class ItemType>
+template<class NewType>
 class NodeType{
-   ItemType info;
-   NodeType<ItemType>* next;
+   NewType info;
+   NodeType<NewType>* next;
+	template<NewType>
+	friend class SortedType;
 };
 
 class PixelType{
@@ -24,6 +24,16 @@ class PixelType{
 class RegionType{
 	public:
 	RegionType &operator = (const RegionType& );
+	
+	template<class ItemType>
+	friend class NodeType;
+   
+   template<class ItemType>
+   friend class SortedType;
+   
+   template<class ItemType>
+   friend class UnsortedType;
+   
    private:
    // GEOMETRIC PROPERTIES
    PixelType centroid;
@@ -36,5 +46,22 @@ class RegionType{
    int max;
 
 };
+
+
+
+RegionType &RegionType:: operator = (const RegionType &rhs )
+{
+	if( this != &rhs )
+	{
+		(*this).size = rhs.size;
+		(*this).orientation = rhs.orientation;
+		(*this).eccentricity = rhs.eccentricity;
+		(*this).mean = rhs.mean;
+		(*this).min = rhs.min;
+		(*this).max = rhs.max;
+		
+		return *this;
+	}
+}
 
 #endif
