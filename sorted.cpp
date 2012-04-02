@@ -1,8 +1,8 @@
-#include "unsorted.h"
+#include "sorted.h"
 
 // CONSTRUCTOR
 template<class ItemType>
-UnsortedType<ItemType>::UnsortedType()
+SortedType<ItemType>::SortedType()
 {
  length = 0;
  listData = NULL;
@@ -11,14 +11,14 @@ UnsortedType<ItemType>::UnsortedType()
 
 // DESTRUCTOR
 template<class ItemType>
-UnsortedType<ItemType>::~UnsortedType()
+SortedType<ItemType>::~SortedType()
 {
  MakeEmpty();
 }
 
 // IS FULL 
 template<class ItemType>
-bool UnsortedType<ItemType>::IsFull() const
+bool SortedType<ItemType>::IsFull() const
 {
  NodeType<ItemType>* ptr;
  
@@ -33,21 +33,21 @@ bool UnsortedType<ItemType>::IsFull() const
 
 // LENGTH IS
 template<class ItemType>
-int UnsortedType<ItemType>::LengthIs() const
+int SortedType<ItemType>::LengthIs() const
 {
  return length;
 }
  
 // RESET LIST
 template<class ItemType>
-int UnsortedType<ItemType>::ResetList()
+int SortedType<ItemType>::ResetList()
 {
  currentPos = listData;
 }
 
 //GET NEXT ITEM
 template<class ItemType>
-void UnsortedType<ItemType>::GetNextItem(ItemType& item)
+void SortedType<ItemType>::GetNextItem(ItemType& item)
 {
  item = currentPos->info;
  currentPos = currentPos->next;
@@ -55,14 +55,14 @@ void UnsortedType<ItemType>::GetNextItem(ItemType& item)
  
 //IS LAST ITEM
 template<class ItemType>
-bool UnsortedType<ItemType>::IsLastItem() const
+bool SortedType<ItemType>::IsLastItem() const
 {
  return(currentPos == NULL);
 } 
 
 // MAKE EMPTY
 template<class ItemType>
-void UnsortedType<ItemType>::MakeEmpty()
+void SortedType<ItemType>::MakeEmpty()
 {
  NodeType<ItemType>* tempPtr;
  
@@ -134,7 +134,7 @@ void SortedType<ItemType>::InsertItem(ItemType newItem)
 
 //DELETE ITEM
 template <class ItemType>
-void UnsortedType<ItemType>::DeleteItem(ItemType item)
+void SortedType<ItemType>::DeleteItem(ItemType item)
 {
  NodeType<ItemType>* location = listData;
  NodeType<ItemType>* tempLocation;

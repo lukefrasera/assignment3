@@ -5,18 +5,20 @@
 
 using namespace std;
 
-template <ItemType>
+template <class ItemType>
 class SortedType{
    public:
+   SortedType();
+   ~SortedType();
    void MakeEmpty();
-   bool isFull() const;
-   int lengthIs() const;
+   bool IsFull() const;
+   int LengthIs() const;
    void RetrieveItem( ItemType &, bool &);
    void InsertItem( ItemType );
    void DeleteItem( ItemType);
    void ResetList();
-   bool isLastItem();
-   void getNextItem( ItemType& )
+   bool IsLastItem();
+   void GetNextItem( ItemType& )
    
    private:
    int length;

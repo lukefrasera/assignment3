@@ -1,4 +1,7 @@
 #include <iostream>
+#ifndef NODE_H
+#define NODE_H
+
 
 using namespace std;
 
@@ -32,3 +35,4 @@ class PixelType{
    int y;
    friend class RegionType;
 };
+#endif
