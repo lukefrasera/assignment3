@@ -5,6 +5,10 @@
 #include "WriteImage.cpp"
 #include "stack.h"
 #include "queue.h"
+#include "nodetype.h"
+#include "sorted.h"
+#include "unsorted.h"
+
 
 
 using namespace std;
@@ -12,13 +16,15 @@ using namespace std;
 // Function prototypes
 int computeComponents_BFS_(  ImageType & input, ImageType & output );
 
-int computeComponents_DFS_(  ImageType & input, ImageType & output );
+int computeComponents_DFS_(  ImageType & input, ImageType & output, 
+											RegionType listOfRegions );
+
 
 void findcomponentBFS( ImageType & input, ImageType & output, int x, int y,
                          int label );
                          
 void findcomponentDFS( ImageType & input, ImageType & output, int x, int y,
-                            int label );
+                            int label, RegionType region );
 
 int main()
 {
@@ -592,8 +598,9 @@ int main()
             
             // Create new output image of the right size
             ImageType DFS( row, col, max );
-            
-            label = computeComponents_DFS_( picture, DFS );
+			
+            ///////////////////////////////////////////////////
+            //label = computeComponents_DFS_( picture, DFS );
             
             cout << "Objects in image: " << label << endl;
             
@@ -669,7 +676,8 @@ Purpose: Compute how many objects are in an image
 Notes: The two images passed into the function must already be sized
        the same
 */
-int computeComponents_DFS_(  ImageType & input, ImageType & output,  )
+int computeComponents_DFS_(  ImageType & input, ImageType & output, 
+										RegionType listOfRegion)
 {
    int row, col, LEVEL;
    int value, value_2;
@@ -700,7 +708,7 @@ int computeComponents_DFS_(  ImageType & input, ImageType & output,  )
                conncomp++;
                label = conncomp;
                
-               findcomponentDFS( input, output, i, j, label );
+               //findcomponentDFS( input, output, i, j, label );
            }
        }
    }
@@ -759,7 +767,7 @@ void findcomponentBFS( ImageType & input, ImageType & output, int x, int y,
 
 
 void findcomponentDFS(  ImageType & input, ImageType & output, int x, int y,
-                            int label )
+                            int label, TegionType region )
 {
    int position_x, position_y;
    int row, col, LEVEL;
