@@ -1,5 +1,5 @@
-image.out :	image.o driver.o stack.o queue.o nodetype.o sorted.o unsorted.o 
-	g++ -o image.out image.o driver.o stack.o queue.o nodetype.o sorted.o unsorted.o
+image.out :	image.o driver.o sorted.o nodetype.o stack.o queue.o sorted.o unsorted.o 
+	g++ -o image.out image.o driver.o sorted.o nodetype.o stack.o queue.o unsorted.o
 
 image.o :	image.cpp image.h
 	g++ -c image.cpp
