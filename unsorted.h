@@ -5,18 +5,20 @@
 
 using namespace std;
 
-template <ItemType>
+template <class ItemType>
 class UnsortedType{
    public:
+   UnsortedType();
+   ~UnsortedType();
    void MakeEmpty();
-   bool isFull() const;
-   int lengthIs() const;
+   bool IsFull() const;
+   int LengthIs() const;
    void RetrieveItem( ItemType &, bool &);
    void InsertItem( ItemType );
    void DeleteItem( ItemType);
    void ResetList();
-   bool isLastItem() const;
-   void getNextItem( ItemType& )
+   bool IsLastItem() const;
+   void GetNextItem( ItemType& );
    
    private:
    int length;
