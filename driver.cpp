@@ -8,7 +8,7 @@
 #include "WriteImage.cpp"
 #include "stack.h"
 #include "queue.h"
-#include "sorted.h"
+#include "list.h"
 
 
 using namespace std;
