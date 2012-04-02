@@ -22,6 +22,8 @@ class PixelType{
 };
 
 class RegionType{
+	public:
+	RegionType &operator = (const RegionType& );
    private:
    // GEOMETRIC PROPERTIES
    PixelType centroid;

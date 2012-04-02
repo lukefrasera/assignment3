@@ -3,11 +3,12 @@
 #include "ReadImageHeader.cpp"
 #include "ReadImage.cpp"
 #include "WriteImage.cpp"
+#include "nodetype.h"
 #include "stack.h"
 #include "queue.h"
-#include "nodetype.h"
 #include "sorted.h"
 #include "unsorted.h"
+
 
 
 
@@ -17,7 +18,7 @@ using namespace std;
 int computeComponents_BFS_(  ImageType & input, ImageType & output );
 
 int computeComponents_DFS_(  ImageType & input, ImageType & output, 
-											RegionType listOfRegions );
+											SortedType<RegionType> listOfRegions );
 
 
 void findcomponentBFS( ImageType & input, ImageType & output, int x, int y,
@@ -677,11 +678,12 @@ Notes: The two images passed into the function must already be sized
        the same
 */
 int computeComponents_DFS_(  ImageType & input, ImageType & output, 
-										RegionType listOfRegion)
+										SortedType<RegionType> listOfRegions)
 {
    int row, col, LEVEL;
    int value, value_2;
    int conncomp, label;
+   RegionType region;
    
    // retrieve image info
    input.getImageInfo( row, col, LEVEL );
@@ -707,8 +709,9 @@ int computeComponents_DFS_(  ImageType & input, ImageType & output,
            {
                conncomp++;
                label = conncomp;
-////////////////////////////////////////////////////////////////////////////               
-               //findcomponentDFS( input, output, i, j, label );
+              
+               findcomponentDFS( input, output, i, j, label, region );
+               listOfRegions.InsertItem( region );
            }
        }
    }
