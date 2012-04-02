@@ -75,7 +75,7 @@ void UnsortedType<ItemType>::MakeEmpty()
 
 // RETRIEVE ITEM
 template<class ItemType>
-void UnsortedType<ItemType>::RetrieveItem(ItemType& item, bool& found)
+void SortedType<ItemType>::RetrieveItem(ItemType& item, bool& found)
 {
  NodeType<ItemType>* location;
  
@@ -84,12 +84,14 @@ void UnsortedType<ItemType>::RetrieveItem(ItemType& item, bool& found)
  
  while( (location != NULL) && !found) {
  
-   if(item == location->info) {
+   if (location->info < item) 
+     location = location->next;
+   else if (location->info == item) {
      found = true;
      item = location->info;
    }
    else
-     location = location->next;
+     location = NULL;  
  }
 } 
 
