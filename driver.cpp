@@ -707,7 +707,7 @@ int computeComponents_DFS_(  ImageType & input, ImageType & output,
            {
                conncomp++;
                label = conncomp;
-               
+////////////////////////////////////////////////////////////////////////////               
                //findcomponentDFS( input, output, i, j, label );
            }
        }
@@ -767,7 +767,7 @@ void findcomponentBFS( ImageType & input, ImageType & output, int x, int y,
 
 
 void findcomponentDFS(  ImageType & input, ImageType & output, int x, int y,
-                            int label, TegionType region )
+                            int label, RegionType region )
 {
    int position_x, position_y;
    int row, col, LEVEL;

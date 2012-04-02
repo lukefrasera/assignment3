@@ -17,8 +17,8 @@ class SortedType{
    void InsertItem( ItemType );
    void DeleteItem( ItemType);
    void ResetList();
-   bool IsLastItem();
-   void GetNextItem( ItemType& )
+   bool IsLastItem() const;
+   void GetNextItem( ItemType& );
    
    private:
    int length;

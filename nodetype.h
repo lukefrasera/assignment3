@@ -14,6 +14,13 @@ class NodeType{
    NodeType<ItemType>* next;
 };
 
+class PixelType{
+   private:
+   int x;
+   int y;
+   friend class RegionType;
+};
+
 class RegionType{
    private:
    // GEOMETRIC PROPERTIES
@@ -28,11 +35,4 @@ class RegionType{
 
 };
 
-
-class PixelType{
-   private:
-   int x;
-   int y;
-   friend class RegionType;
-};
 #endif
