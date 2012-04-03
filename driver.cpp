@@ -19,14 +19,14 @@ using namespace std;
 int computeComponents_BFS_(  ImageType & input, ImageType & output );
 
 int computeComponents_DFS_(  ImageType & input, ImageType & output, 
-											SortedType<RegionType> listOfRegions );
+											SortedType<RegionType> listOfRegions, ImageType & );
 
 
 void findcomponentBFS( ImageType & input, ImageType & output, int x, int y,
                          int label );
                          
 void findcomponentDFS( ImageType & input, ImageType & output, int x, int y,
-                            int label, RegionType );
+                            int label, RegionType, ImageType& );
 
 
 // SUB MENU FUNCTIONS
@@ -829,7 +829,7 @@ Notes: The two images passed into the function must already be sized
        the same
 */
 int computeComponents_DFS_(  ImageType & input, ImageType & output, 
-										SortedType<RegionType> listOfRegions)
+										SortedType<RegionType> listOfRegions, ImageType & Origonal)
 {
    int row, col, LEVEL;
    int value, value_2;
@@ -923,11 +923,13 @@ void findcomponentBFS( ImageType & input, ImageType & output, int x, int y,
 
 
 void findcomponentDFS(  ImageType & input, ImageType & output, int x, int y,
-                            int label, RegionType region )
+                            int label, RegionType& region, ImageType& Origonal )
 {
    int position_x, position_y;
    int row, col, LEVEL;
    int value, value_2;
+   PixelType temp;
+   
    input.getImageInfo( row, col, LEVEL );
    
    // There's no real need for this assignment to go any larger than 6000
@@ -948,6 +950,9 @@ void findcomponentDFS(  ImageType & input, ImageType & output, int x, int y,
        Stack_y.Pop( position_y );
        
        output.setPixelVal( position_x, position_y, (label * 10) );
+	   temp.x = position_x;
+	   temp.y = position_y;
+	   region.pixel_list.InsertItem( temp );
        
        // Enqueue every neighboring Pixel location
        for( int i = (position_x - 1); i <= (position_x + 1) && i < row && i >=0;
@@ -971,6 +976,7 @@ void findcomponentDFS(  ImageType & input, ImageType & output, int x, int y,
        }
    }
    
+   RenderRegions( region, Origonal );
 }
 
 //////////////////////////// SUB MENU FUNCTIONS ////////////////////////////////

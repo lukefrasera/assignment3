@@ -113,6 +113,8 @@ class RegionType{
    template<class ItemType>
    friend class UnsortedType;
    
+   UnsortedType<PixelType> pixel_list;
+   
    private:
    // GEOMETRIC PROPERTIES
    PixelType centroid;
@@ -127,7 +129,7 @@ class RegionType{
    float lambda_min, lambda_max, axes_max, axes_min;
    
 	// List of pixels
-	UnsortedType<PixelType> pixel_list;
+	
 	
 };
 
