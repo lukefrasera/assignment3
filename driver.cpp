@@ -32,6 +32,8 @@ void findcomponentDFS( ImageType & input, ImageType & output, int x, int y,
 // SUB MENU FUNCTIONS
 void displaySizes( ImageType &, SortedType<RegionType> rhs, int, int );
 
+void deleteSmallComponents( SortedType<RegionType>, int );
+
 int main()
 {
     int row, col, max, selection, pixel, thresh, label, sub_select = 0;
@@ -627,7 +629,7 @@ int main()
             
             case 19:
             {
-            	int A, B;
+            	int A, B, min_size;
             	
             	
             	cout << "Input File Name: ";
@@ -651,8 +653,13 @@ int main()
 					// CALL MANIPULATION ON IMAGE
 					computeComponents_DFS_( sub_pic, result_pic, regions );
 					
+					cout << "Enter the minimum size for objects: ";
+					cin >> min_size;
 					
-					////// GET REGION
+					deleteSmallComponents( regions, min_size );
+					
+					
+					////// GET REGIONS
 		         do{
 		         	cout << "========== Regions and their Properties ==========" << endl;
 		         	//regions.print(); // PRINT REGION INFORMATION
@@ -987,4 +994,74 @@ void displaySizes( ImageType &input, SortedType<RegionType> rhs, int small, int 
 }
 
 
+
+void displaySizes( ImageType &input, SortedType<RegionType> rhs, int small, int big )
+{
+	ImageType tempImage( input );
+	RegionType cursor, min, max;
+	PixelType temp;
+	int N, M, Q;
+	char out_name[20];
+	
+	min.setSize( small );
+	max.setSize( big );
+	
+	// Set new image to all black
+	input.getImageInfo( N, M, Q );
+	
+	for( int i = 0; i < N; i++ )
+	{
+		for( int j = 0; j < M; j++ )
+		{
+			tempImage.setPixelVal( i, j, 0 );
+		}
+	}
+	
+	rhs.ResetList();
+	rhs.GetNextItem( cursor );
+	
+	// Get to node >= small
+	while( cursor < min )
+	{
+		rhs.GetNextItem( cursor );
+	}
+	while( cursor <= max )
+	{
+		// WRITE REGION TO IMAGE
+		cursor.writeToImage( input, tempImage );
+		
+		rhs.GetNextItem( cursor );
+	}
+	
+	cout << "Enter desired file name: ";
+   cin >> out_name;
+   writeImage( out_name, tempImage );
+	
+}
+
+
+void deleteSmallComponents( SortedType<RegionType> listOfRegions, int threshold)
+{
+	RegionType temp;
+	RegionType test;
+	
+	test.setSize( threshold );
+	
+	while( temp < test )
+	{
+		listOfRegions.DeleteItem( temp );
+		listOfRegions.GetNextItem( temp );
+	}
+	
+}
+
 #endif
+
+
+
+
+
+
+
+
+
