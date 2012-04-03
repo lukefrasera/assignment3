@@ -606,8 +606,11 @@ void UnsortedType<ItemType>::ResetList()
 template<class ItemType>
 void UnsortedType<ItemType>::GetNextItem(ItemType& item)
 {
- item = currentPos->info;
- currentPos = currentPos->next;
+ if( !(currentpos == NULL ))
+	{
+		item = currentPos->info;
+		currentPos = currentPos->next;
+	}
 }
 
 //IS LAST ITEM
