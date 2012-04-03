@@ -38,6 +38,9 @@ void displayOrientations( ImageType &input, SortedType<RegionType> rhs,
 void displayEcc( ImageType &input, SortedType<RegionType> rhs, 
 										int small, int big );
 
+void displayInt( ImageType &input, SortedType<RegionType> rhs, 
+										int small, int big );
+
 void deleteSmallComponents( SortedType<RegionType>, int );
 
 int main()
@@ -731,7 +734,7 @@ int main()
 				   			break;
 				   		}
 				   		
-				   		displayEcc( sub_pic, regions, A, B )
+				   		displayEcc( sub_pic, regions, A, B );
 				   		
 		         		break;
 		         		
@@ -749,6 +752,9 @@ int main()
 				   			cout << "ERROR: The sizes were entered incorrectly" << endl;
 				   			break;
 				   		}
+				   		
+				   		displayInt( sub_pic, regions, A, B );
+				   		
 		         		break;
 		         		
 		         	}
@@ -1032,16 +1038,16 @@ void displayOrientations( ImageType &input, SortedType<RegionType> rhs,
 	
 	rhs.ResetList();
 	rhs.GetNextItem( cursor );
-	test = rhs.orCompare( cursor, min );
+	test = cursor.orCompare( cursor, min );
 	
 	// Get to node >= small
 	while( test == true )
 	{
 		rhs.GetNextItem( cursor );
-		test = rhs.orCompare( cursor, min );
+		test = cursor.orCompare( cursor, min );
 	}
 	
-	test = rhs.orCompare( cursor, max );
+	test = cursor.orCompare( cursor, max );
 	
 	while( test == true )
 	{
@@ -1049,7 +1055,7 @@ void displayOrientations( ImageType &input, SortedType<RegionType> rhs,
 		cursor.writeToImage( input, tempImage );
 		
 		rhs.GetNextItem( cursor );
-		test = rhs.orCompare( cursor,max );
+		test = cursor.orCompare( cursor,max );
 	}
 	
 	cursor.writeToImage( input, tempImage );
@@ -1088,16 +1094,16 @@ void displayEcc( ImageType &input, SortedType<RegionType> rhs,
 	
 	rhs.ResetList();
 	rhs.GetNextItem( cursor );
-	test = rhs.orCompare( cursor, min );
+	test = cursor.eccCompare( cursor, min );
 	
 	// Get to node >= small
 	while( test == true )
 	{
 		rhs.GetNextItem( cursor );
-		test = rhs.orCompare( cursor, min );
+		test = cursor.eccCompare( cursor, min );
 	}
 	
-	test = rhs.orCompare( cursor, max );
+	test = cursor.eccCompare( cursor, max );
 	
 	while( test == true )
 	{
@@ -1105,7 +1111,7 @@ void displayEcc( ImageType &input, SortedType<RegionType> rhs,
 		cursor.writeToImage( input, tempImage );
 		
 		rhs.GetNextItem( cursor );
-		test = rhs.orCompare( cursor,max );
+		test = cursor.eccCompare( cursor,max );
 	}
 	
 	cursor.writeToImage( input, tempImage );
@@ -1116,6 +1122,61 @@ void displayEcc( ImageType &input, SortedType<RegionType> rhs,
 	
 }
 
+
+
+void displayInt( ImageType &input, SortedType<RegionType> rhs, 
+										int small, int big )
+{
+	ImageType tempImage( input );
+	RegionType cursor, min, max;
+	PixelType temp;
+	int N, M, Q;
+	char out_name[20];
+	bool test;
+	
+	min.setInt( small );
+	max.setInt( big );
+	
+	// Set new image to all black
+	input.getImageInfo( N, M, Q );
+	
+	for( int i = 0; i < N; i++ )
+	{
+		for( int j = 0; j < M; j++ )
+		{
+			tempImage.setPixelVal( i, j, 0 );
+		}
+	}
+	
+	rhs.ResetList();
+	rhs.GetNextItem( cursor );
+	test = cursor.intCompare( cursor, min );
+	
+	// Get to node >= small
+	while( test == true )
+	{
+		rhs.GetNextItem( cursor );
+		test = cursor.intCompare( cursor, min );
+	}
+	
+	test = cursor.intCompare( cursor, max );
+	
+	while( test == true )
+	{
+		// WRITE REGION TO IMAGE
+		cursor.writeToImage( input, tempImage );
+		
+		rhs.GetNextItem( cursor );
+		test = cursor.intCompare( cursor,max );
+	}
+	
+	cursor.writeToImage( input, tempImage );
+	
+	cout << "Enter desired file name: ";
+   cin >> out_name;
+   writeImage( out_name, tempImage );
+	
+}
 
 void deleteSmallComponents( SortedType<RegionType> listOfRegions, int threshold)
 {

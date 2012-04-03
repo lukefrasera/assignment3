@@ -93,13 +93,15 @@ class RegionType{
 	bool operator == (const RegionType& );
 	void setSize( int );
 	void setOrientation( int );
-	void setEcc( int a );
+	void setEcc( int );
+	void setInt( int );
 	void writeToImage( ImageType &, ImageType & );
 	void calcOrientation();
 	void calcEccentricity();
 	void calcIntensity(ImageType );
 	bool orCompare( RegionType, RegionType );
-	bool eccCompare( RegionType, RegionType)
+	bool eccCompare( RegionType, RegionType);
+	bool intCompare( RegionType, RegionType );
 	
 	template<class ItemType>
 	friend class NodeType;
@@ -463,6 +465,11 @@ void RegionType::setEcc( int a )
 	eccentricity = a;
 }
 
+void RegionType::setInt( int a )
+{
+	mean = a;
+}
+
 bool RegionType::orCompare( RegionType a, RegionType b)
 {
 	if( a.orientation < b.orientation )
@@ -476,6 +483,16 @@ bool RegionType::orCompare( RegionType a, RegionType b)
 bool RegionType::eccCompare( RegionType a, RegionType b)
 {
 	if( a.eccentricity < b.eccentricity )
+	{
+		return true;
+	}
+	else
+	return false;
+}
+
+bool RegionType::intCompare( RegionType a, RegionType b )
+{
+	if( a.mean < b.mean )
 	{
 		return true;
 	}
