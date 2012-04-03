@@ -67,6 +67,7 @@ class NodeType{
 
 class PixelType{
    public:
+   void print();
    int x;
    int y;
    friend class RegionType;
@@ -75,6 +76,7 @@ class PixelType{
 
 class RegionType{
 	public:
+	void print();
 	RegionType &operator = ( RegionType& );
 	bool operator < (const RegionType& );
 	
@@ -261,7 +263,28 @@ void SortedType<ItemType>::DeleteItem(ItemType item)
  delete tempLocation;
  length--;
 }
+
+////////////////////////// PIXELTYPE IMPELEMNATION ////////////////////////////
+void PixelType::print()
+{
+	cout << "( " << x << ", " << y << " )";
+}
 //////////////////////// REGION IMPLEMENTATION///////////////////////////////////
+void RegionType::print()
+{
+	cout << "Geometric Properties:" << endl;
+	cout << "  Centroid: ";
+		centroid.print();
+	cout << endl;
+	cout << "  Size: " << size << endl;
+	cout << "  Orientation: " << orientation << endl;
+	cout << "  Eccentricity: " << eccentricity << endl;
+	cout << "Photometric Properties:" << endl;
+	cout << "  Mean Intensity: " << mean << endl;
+	cout << "  Minimum Intensity: " << min << endl;
+	cout << "  Maximum Intensity: " << max << endl;
+}
+
 RegionType &RegionType:: operator = ( RegionType &rhs )
 {
 	PixelType dummy;

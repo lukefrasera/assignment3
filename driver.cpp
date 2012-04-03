@@ -660,7 +660,22 @@ int main()
 		         	switch( sub_select )
 		         	{
 		         		case 1: 
-		         		//
+		         		//Display size regions
+		         		
+		         		break;
+		         		
+		         		case 2:
+		         		// display orientation regions
+		         		break;
+		         		
+		         		case 3:
+		         		// display eccentricity regions
+		         		break;
+		         		
+		         		case 4:
+		         		// display mean intensity regions
+		         		break;
+		         		
 		         	}
 		         	
 		         }while( sub_select != 5 );
