@@ -4,50 +4,14 @@
 
 using namespace std;
 
+template<class ItemType>
+class NodeType;
 
+template<class ItemType>
+class SortedType;
 
-template<class NewType>
-class NodeType{
-   NewType info;
-   NodeType<NewType>* next;
-	template<class ItemType>
-	friend class SortedType;
-};
-
-class PixelType{
-   private:
-   int x;
-   int y;
-   friend class RegionType;
-};
-
-class RegionType{
-	public:
-	RegionType &operator = (const RegionType& );
-	bool operator < (const RegionType& );
-	
-	template<class ItemType>
-	friend class NodeType;
-   
-   template<class ItemType>
-   friend class SortedType;
-   
-   template<class ItemType>
-   friend class UnsortedType;
-   
-   private:
-   // GEOMETRIC PROPERTIES
-   PixelType centroid;
-   int size;
-   int orientation;
-   int eccentricity;
-   // INENSITY PROPERTIES
-   int mean;
-   int min;
-   int max;
-   
-
-};
+template<class ItemType>
+class UnsortedType;
 
 template <class ItemType>
 class SortedType{
@@ -90,6 +54,55 @@ class UnsortedType{
    NodeType<ItemType> *listData;
    NodeType<ItemType>* currentPos;
 };
+
+template<class NewType>
+class NodeType{
+   NewType info;
+   NodeType<NewType>* next;
+	template<class ItemType>
+	friend class SortedType;
+	template<class ItemType>
+	friend class UnsortedType;
+};
+
+class PixelType{
+   public:
+   int x;
+   int y;
+   friend class RegionType;
+   
+};
+
+class RegionType{
+	public:
+	RegionType &operator = ( RegionType& );
+	bool operator < (const RegionType& );
+	
+	template<class ItemType>
+	friend class NodeType;
+   
+   template<class ItemType>
+   friend class SortedType;
+   
+   template<class ItemType>
+   friend class UnsortedType;
+   
+   private:
+   // GEOMETRIC PROPERTIES
+   PixelType centroid;
+   int size;
+   int orientation;
+   int eccentricity;
+   // INENSITY PROPERTIES
+   int mean;
+   int min;
+   int max;
+   
+	// List of pixels
+	UnsortedType<PixelType> pixel_list;
+	
+};
+
 
 
 
@@ -249,8 +262,10 @@ void SortedType<ItemType>::DeleteItem(ItemType item)
  length--;
 }
 //////////////////////// REGION IMPLEMENTATION///////////////////////////////////
-RegionType &RegionType:: operator = (const RegionType &rhs )
+RegionType &RegionType:: operator = ( RegionType &rhs )
 {
+	PixelType dummy;
+	
 	if( this != &rhs )
 	{
 		(*this).size = rhs.size;
@@ -260,6 +275,16 @@ RegionType &RegionType:: operator = (const RegionType &rhs )
 		(*this).min = rhs.min;
 		(*this).max = rhs.max;
 		
+		// Copy Pixels
+		rhs.pixel_list.ResetList();
+		pixel_list.MakeEmpty();
+		
+		while( !rhs.pixel_list.IsLastItem() )
+		{
+			rhs.pixel_list.GetNextItem( dummy );
+			pixel_list.InsertItem( dummy );
+		}
+
 		return *this;
 	}
 }
