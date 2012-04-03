@@ -6,7 +6,7 @@
 
 using namespace std;
 
-template<class ItemType>
+template<class NewType>
 class NodeType;
 
 template<class ItemType>
@@ -65,6 +65,7 @@ class UnsortedType{
 
 template<class NewType>
 class NodeType{
+	NodeType();
    NewType info;
    NodeType<NewType>* next;
 	template<class ItemType>
@@ -115,7 +116,8 @@ class RegionType{
    template<class ItemType>
    friend class UnsortedType;
    
-   UnsortedType<PixelType> pixel_list;
+   // List of pixels
+	UnsortedType<PixelType> pixel_list;
    
    private:
    // GEOMETRIC PROPERTIES
@@ -130,12 +132,16 @@ class RegionType{
    
    float lambda_min, lambda_max, axes_max, axes_min;
    
-	// List of pixels
 	
 	
 };
 
-
+////////////////////////// NODE IMPLEMENTATOIN/////////////////////////////////
+template<class NewType>
+NodeType<NewType>::NodeType()
+{
+	next = NULL;
+}
 
 
 
@@ -240,33 +246,37 @@ void SortedType<ItemType>::RetrieveItem(ItemType& item, bool& found)
 template <class ItemType>
 void SortedType<ItemType>::InsertItem(ItemType newItem)
 {
+	cout << "WAH" << endl;
  NodeType<ItemType>* newNode;
  NodeType<ItemType>* predLoc; 
  NodeType<ItemType>* location;
  bool found;
- 
+ cout << "Getting here" << endl;
  found = false;
  location = listData;
  predLoc = NULL;
  
  while( location != NULL && !found) {
-   if (location->info < newItem) {
-     predLoc = location;
-     location = location->next;
-   }
-   else
-     found = true;
- } 
- newNode = new NodeType<ItemType>;
- newNode->info = newItem;
- 
- if (predLoc == NULL) {
-   newNode->next = listData;  
-   listData = newNode;
- }
- else {
-  newNode->next = location;
-  predLoc->next = newNode;   
+		if (location->info < newItem) {
+		  predLoc = location;
+		  location = location->next;
+		}
+		else
+		  found = true;
+	 } 
+	 cout << "First" << endl;
+	 newNode = new NodeType<ItemType>;
+	 newNode->info = newItem;
+	 
+	 if (predLoc == NULL) {
+		newNode->next = listData;  
+		listData = newNode;
+		cout << "firstNODE" << endl;
+	 }
+	 else {
+	 cout << "second" << endl;
+	  newNode->next = location;
+	  predLoc->next = newNode;   
  }
  length++;
 } 
@@ -311,10 +321,13 @@ RegionType::RegionType()
 	mean = 0;
 	min = 0;
 	max = 0;
+
 }
 
 void RegionType::print()
 {
+	int x, y;
+	PixelType dummy;
 	cout << "Geometric Properties:" << endl;
 	cout << "  Centroid: ";
 		centroid.print();
@@ -326,6 +339,7 @@ void RegionType::print()
 	cout << "  Mean Intensity: " << mean << endl;
 	cout << "  Minimum Intensity: " << min << endl;
 	cout << "  Maximum Intensity: " << max << endl;
+	
 }
 
 RegionType &RegionType:: operator = ( RegionType &rhs )
@@ -364,8 +378,10 @@ void RegionType::calcCentroid()
 	
 	while( !pixel_list.IsLastItem() )
 	{
+	
+		cout << "PREV" << endl;
 		pixel_list.GetNextItem( temp );
-		
+		cout << "GET NEXT" << endl;
 		centroid.x += temp.x;
 		centroid.y += temp.y;
 	}

@@ -649,7 +649,7 @@ int main()
             	int A, B, min_size;
             	
             	
-            	cout << "Input File Name: ";
+            	cout << "Input File Name of Original File: ";
     				cin >> file_name;
     
             	//Read Information from file to dummy ints
@@ -667,13 +667,33 @@ int main()
 					readImage( file_name, sub_pic );
 					cout << "Completed." << endl;
 					
+					
+					
+					cout << "Input File Name of Diluted File: ";
+    				cin >> file_name;
+    
+            	//Read Information from file to dummy ints
+					cout << endl << "Retrieving Header Information" << endl;
+					readImageHeader( file_name, row, col, max, test );
+					cout << "Completed." << endl;
+					
+					// Define image
+					ImageType dilute_pic( row, col, max);
+					 
+					// Read image from file to array
+					cout << endl << "Retrieving File Informtation..." << endl;
+					readImage( file_name, dilute_pic );
+					cout << "Completed." << endl;
+					
 					// CALL MANIPULATION ON IMAGE
-					computeComponents_DFS_( sub_pic/* THIS NEEDS TO BE THE DILUTED IMAGE*/, result_pic, regions, sub_pic );
+					computeComponents_DFS_( dilute_pic, result_pic, regions, sub_pic );
+					
 					
 					cout << "Enter the minimum size for objects: ";
 					cin >> min_size;
 					
 					deleteSmallComponents( regions, min_size );
+					
 					
 					
 					////// GET REGIONS
@@ -865,6 +885,7 @@ int computeComponents_DFS_(  ImageType & input, ImageType & output,
               
                findcomponentDFS( input, output, i, j, label, region, Origonal );
                listOfRegions.InsertItem( region );
+               region.print();
            }
        }
    }
@@ -925,17 +946,20 @@ void findcomponentBFS( ImageType & input, ImageType & output, int x, int y,
 void findcomponentDFS(  ImageType & input, ImageType & output, int x, int y,
                             int label, RegionType& region, ImageType& Origonal )
 {
+	cout << "ARRIVE" << endl;
    int position_x, position_y;
    int row, col, LEVEL;
    int value, value_2;
+   cout << "BEFORE PIXEL" << endl;
    PixelType temp;
+   cout << "AFTER PIXEL" << endl;
    
    input.getImageInfo( row, col, LEVEL );
-   
+   cout << "AFTER GET INFO" << endl;
    // There's no real need for this assignment to go any larger than 6000
-   stack Stack_x(6000);
-   stack Stack_y(6000);
-   
+   stack Stack_x(60000);
+   stack Stack_y(60000);
+   cout << "AFTER STACK DECL." << endl;
    // Empty both stacks
    Stack_x.makeEmpty();
    Stack_y.makeEmpty();
@@ -943,6 +967,8 @@ void findcomponentDFS(  ImageType & input, ImageType & output, int x, int y,
    Stack_x.Push(x);
    Stack_y.Push(y);
    
+
+   cout << "BEFORE LOOP" << endl;
    while( !Stack_x.isEmpty() )
    {
       // set pos_x and pos_y to coordinates
@@ -950,10 +976,12 @@ void findcomponentDFS(  ImageType & input, ImageType & output, int x, int y,
        Stack_y.Pop( position_y );
        
        output.setPixelVal( position_x, position_y, (label * 10) );
+		
 	   temp.x = position_x;
 	   temp.y = position_y;
+		cout << "BEFORE TEMP" << endl;
 	   region.pixel_list.InsertItem( temp );
-       
+      cout << "INSERTTEMP" << endl;
        // Enqueue every neighboring Pixel location
        for( int i = (position_x - 1); i <= (position_x + 1) && i < row && i >=0;
                    i++ )
@@ -975,8 +1003,9 @@ void findcomponentDFS(  ImageType & input, ImageType & output, int x, int y,
            }
        }
    }
-   
+   cout << "RENDER" << endl;
    RenderRegions( region, Origonal );
+   cout << "END" << endl;
 }
 
 //////////////////////////// SUB MENU FUNCTIONS ////////////////////////////////
@@ -1198,9 +1227,13 @@ void deleteSmallComponents( SortedType<RegionType> listOfRegions, int threshold)
 	RegionType test;
 	
 	test.setSize( threshold );
+	cout << "get next" << endl;
+	//listOfRegions.GetNextItem( temp );
+	cout << "before loop" << endl;
 	
 	while( temp < test )
 	{
+		cout << "hit" << endl;
 		listOfRegions.DeleteItem( temp );
 		listOfRegions.GetNextItem( temp );
 	}
@@ -1212,10 +1245,14 @@ void deleteSmallComponents( SortedType<RegionType> listOfRegions, int threshold)
 ////////////////////////////////////////////////////////////////////////////
 void RenderRegions( RegionType& region, const ImageType& input )
 {
+	cout << "GETTING HERE" << endl;
 	region.calcCentroid();
+	cout << "centroid" << endl;
 	region.calcEccentricity();
+	cout << "ecc" << endl;
 	region.calcOrientation();
-	region.calcIntensity( input );
+	cout << "orient" << endl;
+	//region.calcIntensity( input );
 }
 
 ////////////////////////////////////////////////////////////////////////////
