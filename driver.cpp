@@ -30,7 +30,7 @@ void findcomponentDFS( ImageType & input, ImageType & output, int x, int y,
 
 int main()
 {
-    int row, col, max, selection, pixel, thresh, label;
+    int row, col, max, selection, pixel, thresh, label, sub_select = 0;
     int x_in, x_col, y_in, y_col;
     bool test = false;
     char file_name[20], out_name[20], image_1[20], image_2[20], sel;
@@ -77,7 +77,8 @@ int main()
         cout << "16. Erode Image" << endl;
         cout << "17. computeComponents (BFS)" << endl;
         cout << "18. computeComponents (DFS)" << endl;
-        cout << "19. Quit" << endl;
+        cout << "19. Display Region Information" << endl;
+        cout << "20. Quit" << endl;
         cin >> selection;
         cout << endl << endl;
         
@@ -620,9 +621,53 @@ int main()
             break;
             }
             
+            case 19:
+            {
+            	cout << "Input File Name: ";
+    				cin >> file_name;
+    
+            	//Read Information from file to dummy ints
+					cout << endl << "Retrieving Header Information" << endl;
+					readImageHeader( file_name, row, col, max, test );
+					cout << "Completed." << endl;
+					
+					// Define image
+					ImageType sub_pic( row, col, max);
+					ImageType result_pic( row, col, max );
+					SortedType<RegionType> regions;
+					 
+					// Read image from file to array
+					cout << endl << "Retrieving File Informtation..." << endl;
+					readImage( file_name, sub_pic );
+					cout << "Completed." << endl;
+					
+					// CALL MANIPULATION ON IMAGE
+					computeComponents_DFS_( sub_pic, result_pic, regions );
+					
+					
+					////// GET REGION
+		         do{
+		         	cout << "========== Regions and their Properties ==========" << endl;
+		         	//regions.print(); // PRINT REGION INFORMATION
+		         	cout << "Operations: " << endl;
+		         	cout << "1. Display Regions - Size" << endl;
+		         	cout << "2. Display Regions - Orientation" << endl;
+		         	cout << "3. Display Regions - Eccentricity" << endl;
+		         	cout << "4. Display Regions - Mean Intensity" << endl;
+		         	cout << "5. Return to Main" << endl;
+		         	cin >> sub_select;
+		         	
+		         	switch( sub_select )
+		         	{
+		         		case 1: 
+		         		//
+		         	}
+		         	
+		         }while( sub_select != 5 );
+            }
         }
         
-    }while( selection != 19 );
+    }while( selection != 20 );
     
     return 0;
 }
