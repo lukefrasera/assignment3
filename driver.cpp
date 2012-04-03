@@ -25,8 +25,8 @@ int computeComponents_DFS_(  ImageType & input, ImageType & output,
 void findcomponentBFS( ImageType & input, ImageType & output, int x, int y,
                          int label );
                          
-void findcomponentDFS( ImageType & input, ImageType & output, int x, int y,
-                            int label, RegionType, ImageType& );
+void findcomponentDFS(  ImageType & input, ImageType & output, int x, int y,
+                            int label, RegionType& region, ImageType& Origonal );
 
 
 // SUB MENU FUNCTIONS
@@ -45,7 +45,7 @@ void deleteSmallComponents( SortedType<RegionType>, int );
 
 //////////////////////// Calculate Found Regions /////////////////////////
 //////////////////////////////////////////////////////////////////////////
-void RenderRegions( RgionType, const ImageType& );
+void RenderRegions( RegionType& region, const ImageType& input );
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -668,7 +668,7 @@ int main()
 					cout << "Completed." << endl;
 					
 					// CALL MANIPULATION ON IMAGE
-					computeComponents_DFS_( sub_pic, result_pic, regions );
+					computeComponents_DFS_( sub_pic/* THIS NEEDS TO BE THE DILUTED IMAGE*/, result_pic, regions, sub_pic );
 					
 					cout << "Enter the minimum size for objects: ";
 					cin >> min_size;
@@ -863,7 +863,7 @@ int computeComponents_DFS_(  ImageType & input, ImageType & output,
                conncomp++;
                label = conncomp;
               
-               findcomponentDFS( input, output, i, j, label, region );
+               findcomponentDFS( input, output, i, j, label, region, Origonal );
                listOfRegions.InsertItem( region );
            }
        }
@@ -1215,7 +1215,7 @@ void RenderRegions( RegionType& region, const ImageType& input )
 	region.calcCentroid();
 	region.calcEccentricity();
 	region.calcOrientation();
-	region.calIntensity( input );
+	region.calcIntensity( input );
 }
 
 ////////////////////////////////////////////////////////////////////////////

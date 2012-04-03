@@ -99,10 +99,12 @@ class RegionType{
 	void calcOrientation();
 	void calcEccentricity();
 	void calcIntensity(ImageType );
-	void calcCentroid()
+	void calcCentroid();
 	bool orCompare( RegionType, RegionType );
 	bool eccCompare( RegionType, RegionType);
 	bool intCompare( RegionType, RegionType );
+	
+	
 	
 	template<class ItemType>
 	friend class NodeType;
