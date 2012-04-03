@@ -314,8 +314,27 @@ RegionType &RegionType:: operator = ( RegionType &rhs )
 {
 	PixelType dummy;
 	
-	// set size equal to the length of the list  //
-	size = pixel_list.LengthIs();
+	if( this != &rhs )
+	{
+		(*this).size = rhs.size;
+		(*this).orientation = rhs.orientation;
+		(*this).eccentricity = rhs.eccentricity;
+		(*this).mean = rhs.mean;
+		(*this).min = rhs.min;
+		(*this).max = rhs.max;
+		
+		// Copy Pixels
+		rhs.pixel_list.ResetList();
+		pixel_list.MakeEmpty()
+		
+		while( !rhs.pixel_list.IsLastItem() )
+		{
+			rhs.pixel_list.GetNextItem( dummy );
+			pixel_list.InsertItem( dummy );
+
+		}
+		return *this;
+	}
 }
 
 void RegionType::calcOrientation()
@@ -386,6 +405,34 @@ bool RegionType::operator < (const RegionType &rhs )
 {
 	return ( size < rhs.size );
 }
+
+bool RegionType::operator <= (const RegionType &rhs )
+{
+	return ( size <= rhs.size );
+}
+
+void RegionType::setSize( int a )
+{
+	size = a;
+}
+
+void RegionType::writeToImage( ImageType &source, ImageType &dest )
+{
+	PixelType temp;
+	int tempColor;
+	
+	pixel_list.ResetList();
+	
+	while( !pixel_list.IsLastItem() )
+	{
+		pixel_list.GetNextItem( temp );
+		source.getPixelVal( (*pixel_list.listData).info.x, 
+										(*pixel_list.listData).info.y, tempColor );
+		dest.setPixelVal( (*pixel_list.listData).info.x, 
+										(*pixel_list.listData).info.y, tempColor );
+	}
+}
+
 
 /////////////////////////// UNSORTED IMPLEMENTATION ////////////////////////////
 // CONSTRUCTOR
