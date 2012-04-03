@@ -1,72 +1,22 @@
 #ifndef SORT_H
 #define SORT_H
 #include <iostream>
+#include "image.h"
 
 using namespace std;
 
+template<class ItemType>
+class NodeType;
 
+template<class ItemType>
+class SortedType;
 
-template<class NewType>
-class NodeType{
-   NewType info;
-   NodeType<NewType>* next;
-	template<class ItemType>
-	friend class SortedType;
-};
+template<class ItemType>
+class UnsortedType;
 
-class PixelType{
-   private:
-   int x;
-   int y;
-   friend class RegionType;
-};
+class RegionType;
 
-class RegionType{
-public:
-
-	// Compute region operations //
-	void calcCentroid();
-	void calcSize();
-	void calcOrientation();
-	void calcEccentricity();
-	void calcIntensity();
-	// ************************ //
-	
-	RegionType &operator = (const RegionType& );
-	bool operator < (const RegionType& );
-	
-	template<class ItemType>
-	friend class NodeType;
-   
-   template<class ItemType>
-   friend class SortedType;
-   
-   template<class ItemType>
-   friend class UnsortedType;
-   
-   private:
-   // GEOMETRIC PROPERTIES
-   PixelType centroid;
-   int size;
-   float orientation;
-   float eccentricity;
-   
-   // axes calculations
-   float axes_max;
-   float axes_min;
-   
-   // principal moments
-   float lambda_max;
-   float lambda_min;
-   
-   
-   // INENSITY PROPERTIES
-   int mean;
-   int min;
-   int max;
-   
-
-};
+class PixelType;
 
 template <class ItemType>
 class SortedType{
@@ -104,11 +54,69 @@ class UnsortedType{
    bool IsLastItem() const;
    void GetNextItem( ItemType& );
    
+   friend class RegionType;
+   
    private:
    int length;
    NodeType<ItemType> *listData;
    NodeType<ItemType>* currentPos;
 };
+
+template<class NewType>
+class NodeType{
+   NewType info;
+   NodeType<NewType>* next;
+	template<class ItemType>
+	friend class SortedType;
+	template<class ItemType>
+	friend class UnsortedType;
+	friend class RegionType;
+};
+
+class PixelType{
+   public:
+   void print();
+   int x;
+   int y;
+   friend class RegionType;
+   
+};
+
+class RegionType{
+	public:
+	RegionType();
+	void print();
+	RegionType &operator = ( RegionType& );
+	bool operator < (const RegionType& );
+	bool operator <= (const RegionType& );
+	void setSize( int );
+	void writeToImage( ImageType &, ImageType & );
+	
+	template<class ItemType>
+	friend class NodeType;
+   
+   template<class ItemType>
+   friend class SortedType;
+   
+   template<class ItemType>
+   friend class UnsortedType;
+   
+   private:
+   // GEOMETRIC PROPERTIES
+   PixelType centroid;
+   int size;
+   int orientation;
+   int eccentricity;
+   // INENSITY PROPERTIES
+   int mean;
+   int min;
+   int max;
+   
+	// List of pixels
+	UnsortedType<PixelType> pixel_list;
+	
+};
+
 
 
 
@@ -267,52 +275,44 @@ void SortedType<ItemType>::DeleteItem(ItemType item)
  delete tempLocation;
  length--;
 }
-//////////////////////// REGION IMPLEMENTATION///////////////////////////////////
-RegionType &RegionType:: operator = (const RegionType &rhs )
+
+////////////////////////// PIXELTYPE IMPELEMNATION ////////////////////////////
+void PixelType::print()
 {
-	if( this != &rhs )
-	{
-		(*this).size = rhs.size;
-		(*this).orientation = rhs.orientation;
-		(*this).eccentricity = rhs.eccentricity;
-		(*this).mean = rhs.mean;
-		(*this).min = rhs.min;
-		(*this).max = rhs.max;
-		
-		return *this;
-	}
+	cout << "( " << x << ", " << y << " )";
 }
-/*
-	void calcCentroid();
-	void calcSize();
-	void calcOrientation();
-	void calcEccentricity();
-	void calcIntensity();
-*/
-void RegionType::calcCentroid()
+//////////////////////// REGION IMPLEMENTATION///////////////////////////////////
+RegionType::RegionType()
 {
-	// calculate the centroid //
-	pixelType temp;
-	pixel_list.ResetList();
-	
 	centroid.x = 0;
 	centroid.y = 0;
-		//calcuate the X bar
-	while( !pixel_list.IsLastItem() )
-	{
-		pixel_list.GetNextItem( temp );
-		centroid.x += temp.x;
-		centroid.y += temp.y;
-	}
 	
-	centroid.x /= pixel_list.LengthIs();
-	centroid.y /= pixel_list.LengthIs();
+	size = 0;
+	orientation = 0;
+	eccentricity = 0; 
+	mean = 0;
+	min = 0;
+	max = 0;
 }
 
-void RegionType::calcSize()
+void RegionType::print()
 {
-	// calculate the area of the region //
-	// calculate the first moment //
+	cout << "Geometric Properties:" << endl;
+	cout << "  Centroid: ";
+		centroid.print();
+	cout << endl;
+	cout << "  Size: " << size << endl;
+	cout << "  Orientation: " << orientation << endl;
+	cout << "  Eccentricity: " << eccentricity << endl;
+	cout << "Photometric Properties:" << endl;
+	cout << "  Mean Intensity: " << mean << endl;
+	cout << "  Minimum Intensity: " << min << endl;
+	cout << "  Maximum Intensity: " << max << endl;
+}
+
+RegionType &RegionType:: operator = ( RegionType &rhs )
+{
+	PixelType dummy;
 	
 	// set size equal to the length of the list  //
 	size = pixel_list.LengthIs();

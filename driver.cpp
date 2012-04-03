@@ -1,3 +1,6 @@
+#ifndef DRIVE_H
+#define DRIVE_H
+
 #include <iostream>
 #include "image.h"
 #include "ReadImageHeader.cpp"
@@ -5,36 +8,40 @@
 #include "WriteImage.cpp"
 #include "stack.h"
 #include "queue.h"
-#include "nodetype.h"
-#include "sorted.h"
-#include "unsorted.h"
-
+#include "list.h"
 
 
 using namespace std;
+
+
 
 // Function prototypes
 int computeComponents_BFS_(  ImageType & input, ImageType & output );
 
 int computeComponents_DFS_(  ImageType & input, ImageType & output, 
-											RegionType listOfRegions );
+											SortedType<RegionType> listOfRegions );
 
 
 void findcomponentBFS( ImageType & input, ImageType & output, int x, int y,
                          int label );
                          
 void findcomponentDFS( ImageType & input, ImageType & output, int x, int y,
-                            int label, RegionType region );
+                            int label, RegionType );
+
+
+// SUB MENU FUNCTIONS
+void displaySizes( ImageType &, SortedType<RegionType> rhs, int, int );
 
 int main()
 {
-    int row, col, max, selection, pixel, thresh, label;
+    int row, col, max, selection, pixel, thresh, label, sub_select = 0;
     int x_in, x_col, y_in, y_col;
     bool test = false;
     char file_name[20], out_name[20], image_1[20], image_2[20], sel;
     int** maker;
     char cont;
     ImageType tester;
+
     
     cout << "------- Program Tester -------" << endl;
     cout << "Input File Name: ";
@@ -74,7 +81,8 @@ int main()
         cout << "16. Erode Image" << endl;
         cout << "17. computeComponents (BFS)" << endl;
         cout << "18. computeComponents (DFS)" << endl;
-        cout << "19. Quit" << endl;
+        cout << "19. Display Region Information" << endl;
+        cout << "20. Quit" << endl;
         cin >> selection;
         cout << endl << endl;
         
@@ -617,9 +625,121 @@ int main()
             break;
             }
             
+            case 19:
+            {
+            	int A, B;
+            	
+            	
+            	cout << "Input File Name: ";
+    				cin >> file_name;
+    
+            	//Read Information from file to dummy ints
+					cout << endl << "Retrieving Header Information" << endl;
+					readImageHeader( file_name, row, col, max, test );
+					cout << "Completed." << endl;
+					
+					// Define image
+					ImageType sub_pic( row, col, max);
+					ImageType result_pic( row, col, max );
+					SortedType<RegionType> regions;
+					 
+					// Read image from file to array
+					cout << endl << "Retrieving File Informtation..." << endl;
+					readImage( file_name, sub_pic );
+					cout << "Completed." << endl;
+					
+					// CALL MANIPULATION ON IMAGE
+					computeComponents_DFS_( sub_pic, result_pic, regions );
+					
+					
+					////// GET REGION
+		         do{
+		         	cout << "========== Regions and their Properties ==========" << endl;
+		         	//regions.print(); // PRINT REGION INFORMATION
+		         	cout << "Operations: " << endl;
+		         	cout << "1. Display Regions - Size" << endl;
+		         	cout << "2. Display Regions - Orientation" << endl;
+		         	cout << "3. Display Regions - Eccentricity" << endl;
+		         	cout << "4. Display Regions - Mean Intensity" << endl;
+		         	cout << "5. Return to Main" << endl;
+		         	cin >> sub_select;
+		         	
+		         	switch( sub_select )
+		         	{
+		         		case 1: 
+		         		//Display size regions
+		         		cout << "Display Regions Between Two Sizes:" << endl;
+		      		
+				   		cout << "Enter Smaller Size: ";
+				   		cin >> A;
+				   		cout << "Enter Larger Size: ";
+				   		cin >> B;
+				   		
+				   		if( B < A )
+				   		{
+				   			cout << "ERROR: The sizes were entered incorrectly" << endl;
+				   			break;
+				   		}
+				   		
+				   		displaySizes( sub_pic, regions, A, B );
+				      		
+		         		break;
+		         		
+		         		case 2:
+		         		// display orientation regions
+		         		cout << "Display Regions Between Two Orientations:" << endl;
+		      		
+				   		cout << "Enter Smaller Orientation: ";
+				   		cin >> A;
+				   		cout << "Enter Larger Orientation: ";
+				   		cin >> B;
+				   		
+				   		if( B < A )
+				   		{
+				   			cout << "ERROR: The sizes were entered incorrectly" << endl;
+				   			break;
+				   		}
+		         		break;
+		         		
+		         		case 3:
+		         		// display eccentricity regions
+		         		cout << "Display Regions Between Two Eccentricities:" << endl;
+		      		
+				   		cout << "Enter Smaller Eccentricity: ";
+				   		cin >> A;
+				   		cout << "Enter Larger Eccentricity: ";
+				   		cin >> B;
+				   		
+				   		if( B < A )
+				   		{
+				   			cout << "ERROR: The sizes were entered incorrectly" << endl;
+				   			break;
+				   		}
+		         		break;
+		         		
+		         		case 4:
+		         		// display mean intensity regions
+		         		cout << "Display Regions Between Two Eccentricities:" << endl;
+		      		
+				   		cout << "Enter Smaller Eccentricity: ";
+				   		cin >> A;
+				   		cout << "Enter Larger Eccentricity: ";
+				   		cin >> B;
+				   		
+				   		if( B < A )
+				   		{
+				   			cout << "ERROR: The sizes were entered incorrectly" << endl;
+				   			break;
+				   		}
+		         		break;
+		         		
+		         	}
+		         	
+		         }while( sub_select != 5 );
+            }
         }
         
-    }while( selection != 19 );
+    }while( selection != 20 );
     
     return 0;
 }
@@ -677,11 +797,14 @@ Notes: The two images passed into the function must already be sized
        the same
 */
 int computeComponents_DFS_(  ImageType & input, ImageType & output, 
-										RegionType listOfRegion)
+										SortedType<RegionType> listOfRegions)
 {
    int row, col, LEVEL;
    int value, value_2;
    int conncomp, label;
+   RegionType region;
+   
+   
    
    // retrieve image info
    input.getImageInfo( row, col, LEVEL );
@@ -707,8 +830,9 @@ int computeComponents_DFS_(  ImageType & input, ImageType & output,
            {
                conncomp++;
                label = conncomp;
-               
-               //findcomponentDFS( input, output, i, j, label );
+              
+               findcomponentDFS( input, output, i, j, label, region );
+               listOfRegions.InsertItem( region );
            }
        }
    }
@@ -767,7 +891,7 @@ void findcomponentBFS( ImageType & input, ImageType & output, int x, int y,
 
 
 void findcomponentDFS(  ImageType & input, ImageType & output, int x, int y,
-                            int label, TegionType region )
+                            int label, RegionType region )
 {
    int position_x, position_y;
    int row, col, LEVEL;
@@ -817,3 +941,50 @@ void findcomponentDFS(  ImageType & input, ImageType & output, int x, int y,
    
 }
 
+//////////////////////////// SUB MENU FUNCTIONS ////////////////////////////////
+void displaySizes( ImageType &input, SortedType<RegionType> rhs, int small, int big )
+{
+	ImageType tempImage( input );
+	RegionType cursor, min, max;
+	PixelType temp;
+	int N, M, Q;
+	char out_name[20];
+	
+	min.setSize( small );
+	max.setSize( big );
+	
+	// Set new image to all black
+	input.getImageInfo( N, M, Q );
+	
+	for( int i = 0; i < N; i++ )
+	{
+		for( int j = 0; j < M; j++ )
+		{
+			tempImage.setPixelVal( i, j, 0 );
+		}
+	}
+	
+	rhs.ResetList();
+	rhs.GetNextItem( cursor );
+	
+	// Get to node >= small
+	while( cursor < min )
+	{
+		rhs.GetNextItem( cursor );
+	}
+	while( cursor <= max )
+	{
+		// WRITE REGION TO IMAGE
+		cursor.writeToImage( input, tempImage );
+		
+		rhs.GetNextItem( cursor );
+	}
+	
+	cout << "Enter desired file name: ";
+   cin >> out_name;
+   writeImage( out_name, tempImage );
+	
+}
+
+
+#endif

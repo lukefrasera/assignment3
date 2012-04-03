@@ -1,3 +1,5 @@
+
+
 #include "unsorted.h"
 
 // CONSTRUCTOR
@@ -20,7 +22,7 @@ template<class ItemType>
 bool UnsortedType<ItemType>::IsFull() const
 {
  NodeType<ItemType>* ptr;
- 
+ 
  ptr = new NodeType<ItemType>;
  if(ptr == NULL)
    return true;
@@ -36,10 +38,10 @@ int UnsortedType<ItemType>::LengthIs() const
 {
  return length;
 }
- 
+
 // RESET LIST
 template<class ItemType>
-int UnsortedType<ItemType>::ResetList()
+void UnsortedType<ItemType>::ResetList()
 {
  currentPos = listData;
 }
@@ -51,7 +53,7 @@ void UnsortedType<ItemType>::GetNextItem(ItemType& item)
  item = currentPos->info;
  currentPos = currentPos->next;
 }
- 
+
 //IS LAST ITEM
 template<class ItemType>
 bool UnsortedType<ItemType>::IsLastItem() const
@@ -64,7 +66,7 @@ template<class ItemType>
 void UnsortedType<ItemType>::MakeEmpty()
 {
  NodeType<ItemType>* tempPtr;
- 
+ 
  while(listData != NULL) {
    tempPtr = listData;
    listData = listData->next;
@@ -78,12 +80,12 @@ template<class ItemType>
 void UnsortedType<ItemType>::RetrieveItem(ItemType& item, bool& found)
 {
  NodeType<ItemType>* location;
- 
+ 
  location = listData;
  found = false;
  
  while( (location != NULL) && !found) {
- 
+ 
    if(item == location->info) {
      found = true;
      item = location->info;
@@ -98,7 +100,7 @@ template <class ItemType>
 void UnsortedType<ItemType>::InsertItem (ItemType newItem)
 { 
  NodeType<ItemType>* location;
- 
+ 
  location = new NodeType<ItemType>;
  location->info = newItem;
  location->next = listData;
@@ -112,18 +114,16 @@ void UnsortedType<ItemType>::DeleteItem(ItemType item)
 {
  NodeType<ItemType>* location = listData;
  NodeType<ItemType>* tempLocation;
- 
+ 
  if(item == listData->info) {
    tempLocation = listData; // special case
    listData = listData->next;  
  }
  else {
- 
    while(!(item == (location->next)->info))
      location = location->next;
-    
+     
    // delete node at location->next
- 
    tempLocation=location->next;
    location->next = tempLocation->next;
  } 
@@ -134,11 +134,7 @@ void UnsortedType<ItemType>::DeleteItem(ItemType item)
 // 
  
  
- 
- 
- 
- 
- 
+
  
  
  
