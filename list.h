@@ -404,7 +404,28 @@ void RegionType::calcEccentricity()
 */
 void RegionType::calcIntensity( ImageType rhs)
 {
+	mean = 0;
+	min = 0;
+	max = 0;
+	int imagevalue;
+	PixelType temp;
+	pixel_list.ResetList();
+	while( !pixel_list.IsLastItem() )
+	{
+		pixel_list.GetNextItem( temp );
+		rhs.getPixelVal( temp.x, temp.y, imagevalue );
+		mean += imagevalue;
+		if( mean < imagevalue )
+		{
+			max = imagevalue;
+		}
+		if( min > imagevalue )
+		{
+			min = imagevalue;
+		}
+	}
 	
+	mean /= pixel_list.LengthIs();
 }
 
 bool RegionType::operator < (const RegionType &rhs )
