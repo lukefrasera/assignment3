@@ -28,6 +28,10 @@ void findcomponentBFS( ImageType & input, ImageType & output, int x, int y,
 void findcomponentDFS( ImageType & input, ImageType & output, int x, int y,
                             int label, RegionType );
 
+
+// SUB MENU FUNCTIONS
+void displaySizes( ImageType &, SortedType<RegionType> rhs, int, int );
+
 int main()
 {
     int row, col, max, selection, pixel, thresh, label, sub_select = 0;
@@ -623,6 +627,9 @@ int main()
             
             case 19:
             {
+            	int A, B;
+            	
+            	
             	cout << "Input File Name: ";
     				cin >> file_name;
     
@@ -661,19 +668,69 @@ int main()
 		         	{
 		         		case 1: 
 		         		//Display size regions
-		         		
+		         		cout << "Display Regions Between Two Sizes:" << endl;
+		      		
+				   		cout << "Enter Smaller Size: ";
+				   		cin >> A;
+				   		cout << "Enter Larger Size: ";
+				   		cin >> B;
+				   		
+				   		if( B < A )
+				   		{
+				   			cout << "ERROR: The sizes were entered incorrectly" << endl;
+				   			break;
+				   		}
+				   		
+				   		displaySizes( sub_pic, regions, A, B );
+				      		
 		         		break;
 		         		
 		         		case 2:
 		         		// display orientation regions
+		         		cout << "Display Regions Between Two Orientations:" << endl;
+		      		
+				   		cout << "Enter Smaller Orientation: ";
+				   		cin >> A;
+				   		cout << "Enter Larger Orientation: ";
+				   		cin >> B;
+				   		
+				   		if( B < A )
+				   		{
+				   			cout << "ERROR: The sizes were entered incorrectly" << endl;
+				   			break;
+				   		}
 		         		break;
 		         		
 		         		case 3:
 		         		// display eccentricity regions
+		         		cout << "Display Regions Between Two Eccentricities:" << endl;
+		      		
+				   		cout << "Enter Smaller Eccentricity: ";
+				   		cin >> A;
+				   		cout << "Enter Larger Eccentricity: ";
+				   		cin >> B;
+				   		
+				   		if( B < A )
+				   		{
+				   			cout << "ERROR: The sizes were entered incorrectly" << endl;
+				   			break;
+				   		}
 		         		break;
 		         		
 		         		case 4:
 		         		// display mean intensity regions
+		         		cout << "Display Regions Between Two Eccentricities:" << endl;
+		      		
+				   		cout << "Enter Smaller Eccentricity: ";
+				   		cin >> A;
+				   		cout << "Enter Larger Eccentricity: ";
+				   		cin >> B;
+				   		
+				   		if( B < A )
+				   		{
+				   			cout << "ERROR: The sizes were entered incorrectly" << endl;
+				   			break;
+				   		}
 		         		break;
 		         		
 		         	}
@@ -883,5 +940,51 @@ void findcomponentDFS(  ImageType & input, ImageType & output, int x, int y,
    }
    
 }
+
+//////////////////////////// SUB MENU FUNCTIONS ////////////////////////////////
+void displaySizes( ImageType &input, SortedType<RegionType> rhs, int small, int big )
+{
+	ImageType tempImage( input );
+	RegionType cursor, min, max;
+	PixelType temp;
+	int N, M, Q;
+	char out_name[20];
+	
+	min.setSize( small );
+	max.setSize( big );
+	
+	// Set new image to all black
+	input.getImageInfo( N, M, Q );
+	
+	for( int i = 0; i < N; i++ )
+	{
+		for( int j = 0; j < M; j++ )
+		{
+			tempImage.setPixelVal( i, j, 0 );
+		}
+	}
+	
+	rhs.ResetList();
+	rhs.GetNextItem( cursor );
+	
+	// Get to node >= small
+	while( cursor < min )
+	{
+		rhs.GetNextItem( cursor );
+	}
+	while( cursor <= max )
+	{
+		// WRITE REGION TO IMAGE
+		cursor.writeToImage( input, tempImage );
+		
+		rhs.GetNextItem( cursor );
+	}
+	
+	cout << "Enter desired file name: ";
+   cin >> out_name;
+   writeImage( out_name, tempImage );
+	
+}
+
 
 #endif

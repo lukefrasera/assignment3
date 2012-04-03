@@ -21,6 +21,8 @@ class UnsortedType{
    bool IsLastItem() const;
    void GetNextItem( ItemType& );
    
+   friend class RegionType;
+   
    private:
    int length;
    NodeType<ItemType> *listData;

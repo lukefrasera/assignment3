@@ -1,6 +1,7 @@
 #ifndef SORT_H
 #define SORT_H
 #include <iostream>
+#include "image.h"
 
 using namespace std;
 
@@ -12,6 +13,10 @@ class SortedType;
 
 template<class ItemType>
 class UnsortedType;
+
+class RegionType;
+
+class PixelType;
 
 template <class ItemType>
 class SortedType{
@@ -49,6 +54,8 @@ class UnsortedType{
    bool IsLastItem() const;
    void GetNextItem( ItemType& );
    
+   friend class RegionType;
+   
    private:
    int length;
    NodeType<ItemType> *listData;
@@ -63,6 +70,7 @@ class NodeType{
 	friend class SortedType;
 	template<class ItemType>
 	friend class UnsortedType;
+	friend class RegionType;
 };
 
 class PixelType{
@@ -76,9 +84,13 @@ class PixelType{
 
 class RegionType{
 	public:
+	RegionType();
 	void print();
 	RegionType &operator = ( RegionType& );
 	bool operator < (const RegionType& );
+	bool operator <= (const RegionType& );
+	void setSize( int );
+	void writeToImage( ImageType &, ImageType & );
 	
 	template<class ItemType>
 	friend class NodeType;
@@ -270,6 +282,19 @@ void PixelType::print()
 	cout << "( " << x << ", " << y << " )";
 }
 //////////////////////// REGION IMPLEMENTATION///////////////////////////////////
+RegionType::RegionType()
+{
+	centroid.x = 0;
+	centroid.y = 0;
+	
+	size = 0;
+	orientation = 0;
+	eccentricity = 0; 
+	mean = 0;
+	min = 0;
+	max = 0;
+}
+
 void RegionType::print()
 {
 	cout << "Geometric Properties:" << endl;
@@ -315,6 +340,33 @@ RegionType &RegionType:: operator = ( RegionType &rhs )
 bool RegionType::operator < (const RegionType &rhs )
 {
 	return ( size < rhs.size );
+}
+
+bool RegionType::operator <= (const RegionType &rhs )
+{
+	return ( size <= rhs.size );
+}
+
+void RegionType::setSize( int a )
+{
+	size = a;
+}
+
+void RegionType::writeToImage( ImageType &source, ImageType &dest )
+{
+	PixelType temp;
+	int tempColor;
+	
+	pixel_list.ResetList();
+	
+	while( !pixel_list.IsLastItem() )
+	{
+		pixel_list.GetNextItem( temp );
+		source.getPixelVal( (*pixel_list.listData).info.x, 
+										(*pixel_list.listData).info.y, tempColor );
+		dest.setPixelVal( (*pixel_list.listData).info.x, 
+										(*pixel_list.listData).info.y, tempColor );
+	}
 }
 
 /////////////////////////// UNSORTED IMPLEMENTATION ////////////////////////////
