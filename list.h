@@ -2,6 +2,7 @@
 #define SORT_H
 #include <iostream>
 #include "image.h"
+#include <cmath>
 
 using namespace std;
 
@@ -91,6 +92,9 @@ class RegionType{
 	bool operator <= (const RegionType& );
 	void setSize( int );
 	void writeToImage( ImageType &, ImageType & );
+	void calcOrientation();
+	void calcEccentricity();
+	void calcIntensity(ImageType );
 	
 	template<class ItemType>
 	friend class NodeType;
@@ -105,12 +109,14 @@ class RegionType{
    // GEOMETRIC PROPERTIES
    PixelType centroid;
    int size;
-   int orientation;
-   int eccentricity;
+   float orientation;
+   float eccentricity;
    // INENSITY PROPERTIES
    int mean;
    int min;
    int max;
+   
+   float lambda_min, lambda_max, axes_max, axes_min;
    
 	// List of pixels
 	UnsortedType<PixelType> pixel_list;
@@ -325,7 +331,7 @@ RegionType &RegionType:: operator = ( RegionType &rhs )
 		
 		// Copy Pixels
 		rhs.pixel_list.ResetList();
-		pixel_list.MakeEmpty()
+		pixel_list.MakeEmpty();
 		
 		while( !rhs.pixel_list.IsLastItem() )
 		{
@@ -339,16 +345,16 @@ RegionType &RegionType:: operator = ( RegionType &rhs )
 
 void RegionType::calcOrientation()
 {
-	int momen_2_x = 0;
+	int moment_2_x = 0;
 	int moment_1_1 = 0;
-	pixelType temp;
+	PixelType temp;
 	
 	if( eccentricity != 0 )
 	{
 		pixel_list.ResetList();
 		while( !pixel_list.IsLastItem() )
 		{
-			pixel_list.GetLastNextItem( temp );
+			pixel_list.GetNextItem( temp );
 			
 			moment_2_x += (( temp.x - centroid.x )*( temp.x - centroid.x ));
 			moment_1_1 += (temp.x - centroid.x)*(temp.y - centroid.y);
@@ -361,8 +367,8 @@ void RegionType::calcOrientation()
 void RegionType::calcEccentricity()
 {
 	// Variables for Moment calclation
-	pixelType moment_2;
-	pixelType temp;
+	PixelType moment_2;
+	PixelType temp;
 	float square_root;
 	int moment_1_1 = 0;
 	
@@ -379,8 +385,8 @@ void RegionType::calcEccentricity()
 			moment_1_1 += (temp.x - centroid.x)*(temp.y - centroid.y);
 		}
 		
-		square_root = sqrt( (moment_2.x)*(moment_2.x) + (moment_2.y)*(moment_2.y) - 2*(moment_2.x)*(moment_2.y)
-			+ 4 * (moment_1_1)(moment_1_1));
+		square_root = sqrt( (moment_2.x)*(moment_2.x) + (moment_2.y)*(moment_2.y) - 
+										2*(moment_2.x)*(moment_2.y) + 4 * (moment_1_1)*(moment_1_1));
 		
 		lambda_max = 0.5 * (moment_2.x + moment_2.y) + 0.5 * square_root;
 		lambda_min = 0.5 * (moment_2.x + moment_2.y) - 0.5 * square_root;
