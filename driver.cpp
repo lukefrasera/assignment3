@@ -32,6 +32,12 @@ void findcomponentDFS( ImageType & input, ImageType & output, int x, int y,
 // SUB MENU FUNCTIONS
 void displaySizes( ImageType &, SortedType<RegionType> rhs, int, int );
 
+void displayOrientations( ImageType &input, SortedType<RegionType> rhs, 
+										int small, int big );
+
+void displayEcc( ImageType &input, SortedType<RegionType> rhs, 
+										int small, int big );
+
 void deleteSmallComponents( SortedType<RegionType>, int );
 
 int main()
@@ -706,6 +712,8 @@ int main()
 				   			cout << "ERROR: The sizes were entered incorrectly" << endl;
 				   			break;
 				   		}
+				   		
+				   		displayOrientations( sub_pic, regions, A, B );
 		         		break;
 		         		
 		         		case 3:
@@ -722,6 +730,9 @@ int main()
 				   			cout << "ERROR: The sizes were entered incorrectly" << endl;
 				   			break;
 				   		}
+				   		
+				   		displayEcc( sub_pic, regions, A, B )
+				   		
 		         		break;
 		         		
 		         		case 4:
@@ -995,16 +1006,18 @@ void displaySizes( ImageType &input, SortedType<RegionType> rhs, int small, int 
 
 
 
-void displaySizes( ImageType &input, SortedType<RegionType> rhs, int small, int big )
+void displayOrientations( ImageType &input, SortedType<RegionType> rhs, 
+										int small, int big )
 {
 	ImageType tempImage( input );
 	RegionType cursor, min, max;
 	PixelType temp;
 	int N, M, Q;
 	char out_name[20];
+	bool test;
 	
-	min.setSize( small );
-	max.setSize( big );
+	min.setOrientation( small );
+	max.setOrientation( big );
 	
 	// Set new image to all black
 	input.getImageInfo( N, M, Q );
@@ -1019,19 +1032,83 @@ void displaySizes( ImageType &input, SortedType<RegionType> rhs, int small, int 
 	
 	rhs.ResetList();
 	rhs.GetNextItem( cursor );
+	test = rhs.orCompare( cursor, min );
 	
 	// Get to node >= small
-	while( cursor < min )
+	while( test == true )
 	{
 		rhs.GetNextItem( cursor );
+		test = rhs.orCompare( cursor, min );
 	}
-	while( cursor <= max )
+	
+	test = rhs.orCompare( cursor, max );
+	
+	while( test == true )
 	{
 		// WRITE REGION TO IMAGE
 		cursor.writeToImage( input, tempImage );
 		
 		rhs.GetNextItem( cursor );
+		test = rhs.orCompare( cursor,max );
 	}
+	
+	cursor.writeToImage( input, tempImage );
+	
+	cout << "Enter desired file name: ";
+   cin >> out_name;
+   writeImage( out_name, tempImage );
+	
+}
+
+
+
+void displayEcc( ImageType &input, SortedType<RegionType> rhs, 
+										int small, int big )
+{
+	ImageType tempImage( input );
+	RegionType cursor, min, max;
+	PixelType temp;
+	int N, M, Q;
+	char out_name[20];
+	bool test;
+	
+	min.setEcc( small );
+	max.setEcc( big );
+	
+	// Set new image to all black
+	input.getImageInfo( N, M, Q );
+	
+	for( int i = 0; i < N; i++ )
+	{
+		for( int j = 0; j < M; j++ )
+		{
+			tempImage.setPixelVal( i, j, 0 );
+		}
+	}
+	
+	rhs.ResetList();
+	rhs.GetNextItem( cursor );
+	test = rhs.orCompare( cursor, min );
+	
+	// Get to node >= small
+	while( test == true )
+	{
+		rhs.GetNextItem( cursor );
+		test = rhs.orCompare( cursor, min );
+	}
+	
+	test = rhs.orCompare( cursor, max );
+	
+	while( test == true )
+	{
+		// WRITE REGION TO IMAGE
+		cursor.writeToImage( input, tempImage );
+		
+		rhs.GetNextItem( cursor );
+		test = rhs.orCompare( cursor,max );
+	}
+	
+	cursor.writeToImage( input, tempImage );
 	
 	cout << "Enter desired file name: ";
    cin >> out_name;
