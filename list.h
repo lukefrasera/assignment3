@@ -99,6 +99,7 @@ class RegionType{
 	void calcOrientation();
 	void calcEccentricity();
 	void calcIntensity(ImageType );
+	void calcCentroid()
 	bool orCompare( RegionType, RegionType );
 	bool eccCompare( RegionType, RegionType);
 	bool intCompare( RegionType, RegionType );
@@ -348,6 +349,24 @@ RegionType &RegionType:: operator = ( RegionType &rhs )
 		}
 		return *this;
 	}
+}
+
+void RegionType::calcCentroid()
+{
+	PixelType temp;
+	centroid.x = 0;
+	centroid.y = 0;
+	pixel_list.ResetList();
+	
+	while( !pixel_list.IsLastItem() )
+	{
+		pixel_list.GetNextItem( temp );
+		
+		centroid.x += temp.x;
+		centroid.y += temp.y;
+	}
+	centroid.x /= pixel_list.LengthIs();
+	size = pixel_list.LengthIs();
 }
 
 void RegionType::calcOrientation()
